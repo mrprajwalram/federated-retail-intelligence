@@ -2,7 +2,9 @@
 
 ## Overview
 
-The Privacy-Preserving Retail Intelligence Platform is a federated learning system that enables collaborative machine learning across multiple retailers without compromising data privacy. The platform leverages the Flower framework for federated orchestration, implements differential privacy for mathematical privacy guarantees, and uses secure aggregation protocols to protect individual retailer contributions.
+The Privacy-Preserving Retail Intelligence Platform is a **horizontal federated learning system** that enables collaborative machine learning across multiple retailers without compromising data privacy. In horizontal federated learning, each retailer has datasets with the same feature space (sales, pricing, inventory data) but different samples (their own customers and transactions), making it ideal for collaborative retail intelligence.
+
+The platform leverages the Flower framework for federated orchestration, implements differential privacy for mathematical privacy guarantees, and uses secure aggregation protocols to protect individual retailer contributions.
 
 The system architecture follows a hub-and-spoke model where each retailer operates a local client that trains models on their private data, while a central server coordinates the federated learning process and delivers aggregated insights through a web dashboard.
 
@@ -231,12 +233,19 @@ graph TB
 
 ### Component Architecture
 
-The platform consists of several key architectural layers designed for scalability and fault tolerance:
+The platform consists of several key architectural layers designed for **horizontal federated learning** scalability and fault tolerance:
 
+**Horizontal Federated Learning Characteristics**:
+- **Same Feature Space**: All retailers share common data schema (product_id, price, quantity, timestamp, customer_segment)
+- **Different Sample Space**: Each retailer has their own unique customer base and transaction history
+- **Model Architecture**: Shared global model architecture trained on distributed but similar datasets
+- **Aggregation Strategy**: FedAvg (Federated Averaging) as primary aggregation method with FedProx fallback
+
+**Architectural Layers**:
 1. **Load Balancing Layer**: SSL termination and traffic distribution across Flower server instances
-2. **Federated Orchestration Layer**: Clustered Flower framework managing client-server communication
+2. **Federated Orchestration Layer**: Clustered Flower framework managing horizontal FL client-server communication
 3. **Privacy Preservation Layer**: Differential privacy and secure aggregation protocols with caching
-4. **Model Training Layer**: Containerized local model training and update generation
+4. **Model Training Layer**: Containerized local model training on retailer-specific datasets
 5. **Intelligence Layer**: Scalable pricing, forecasting, and bundling analytics services
 6. **Presentation Layer**: Load-balanced web dashboard with session management
 7. **Data Layer**: Distributed metadata storage with caching and message queuing
@@ -387,21 +396,36 @@ class FlowerServerInterface:
 
 ### Flower Client Component
 
-**Purpose**: Local federated learning client running at each retailer location.
+**Purpose**: Local horizontal federated learning client running at each retailer location.
 
 **Key Responsibilities**:
-- Local model training on retailer data
-- Model update generation and encryption
-- Communication with central server
-- Local data validation and preprocessing
+- Local model training on retailer's standardized dataset (same features, different samples)
+- Model update generation using FedAvg-compatible parameter averaging
+- Data schema validation to ensure horizontal FL compatibility
+- Communication with central server using Flower's horizontal FL protocols
 
 **Interfaces**:
 ```python
-class FlowerClientInterface:
-    def fit(self, parameters: ModelParameters, config: FitConfig) -> FitResult
-    def evaluate(self, parameters: ModelParameters, config: EvaluateConfig) -> EvaluateResult
-    def get_parameters(self) -> ModelParameters
-    def apply_differential_privacy(self, gradients: Gradients) -> PrivateGradients
+class HorizontalFLClientInterface:
+    def fit(self, parameters: ModelParameters, config: FitConfig) -> FitResult:
+        """Train local model on retailer's dataset with standardized schema"""
+        pass
+    
+    def evaluate(self, parameters: ModelParameters, config: EvaluateConfig) -> EvaluateResult:
+        """Evaluate global model on local test set"""
+        pass
+    
+    def get_parameters(self) -> ModelParameters:
+        """Return current local model parameters for FedAvg aggregation"""
+        pass
+    
+    def validate_data_schema(self, dataset: pd.DataFrame) -> ValidationResult:
+        """Ensure local data matches horizontal FL schema requirements"""
+        pass
+    
+    def apply_differential_privacy(self, gradients: Gradients) -> PrivateGradients:
+        """Apply DP noise to gradients before sharing in horizontal FL"""
+        pass
 ```
 
 ### Secure Aggregation Service
@@ -482,6 +506,39 @@ class DashboardInterface:
 ```
 
 ## Data Models
+
+### Horizontal Federated Learning Data Schema
+
+```python
+@dataclass
+class RetailDataSchema:
+    """Standardized schema for horizontal federated learning across retailers"""
+    # Common feature space across all retailers
+    product_id: str
+    category: str
+    price: float
+    quantity_sold: int
+    timestamp: datetime
+    customer_segment: str
+    promotion_active: bool
+    seasonal_factor: float
+    competitor_price: Optional[float]
+    inventory_level: int
+    
+    # Retailer-specific identifier (kept local, never shared)
+    retailer_id: str  # Only used locally, not in federated training
+    customer_id: str  # Hashed/anonymized, never shared in raw form
+
+@dataclass
+class HorizontalFLConfig:
+    """Configuration for horizontal federated learning"""
+    feature_columns: List[str]  # Standardized features across retailers
+    target_column: str  # Common prediction target
+    min_samples_per_retailer: int  # Minimum dataset size for participation
+    max_retailers_per_round: int  # Maximum participants per training round
+    aggregation_strategy: str  # "fedavg", "fedprox", "scaffold"
+    data_validation_schema: Dict[str, Any]  # Schema validation rules
+```
 
 ### Core Federated Learning Models
 
