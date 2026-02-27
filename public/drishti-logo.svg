@@ -1,0 +1,39 @@
+<svg width="200" height="80" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Network/Eye Icon -->
+  <g transform="translate(170, 200)">
+    <!-- Outer network nodes -->
+    <circle cx="0" cy="-80" r="12" fill="#5EEAD4"/>
+    <circle cx="56" cy="-56" r="10" fill="#2DD4BF"/>
+    <circle cx="80" cy="0" r="12" fill="#14B8A6"/>
+    <circle cx="56" cy="56" r="10" fill="#0D9488"/>
+    <circle cx="0" cy="80" r="12" fill="#0F766E"/>
+    <circle cx="-56" cy="56" r="10" fill="#115E59"/>
+    <circle cx="-80" cy="0" r="12" fill="#134E4A"/>
+    <circle cx="-56" cy="-56" r="10" fill="#1E3A8A"/>
+    
+    <!-- Connecting lines -->
+    <line x1="0" y1="-80" x2="56" y2="-56" stroke="#0F766E" stroke-width="2" opacity="0.6"/>
+    <line x1="56" y1="-56" x2="80" y2="0" stroke="#0F766E" stroke-width="2" opacity="0.6"/>
+    <line x1="80" y1="0" x2="56" y2="56" stroke="#0F766E" stroke-width="2" opacity="0.6"/>
+    <line x1="56" y1="56" x2="0" y2="80" stroke="#0F766E" stroke-width="2" opacity="0.6"/>
+    <line x1="0" y1="80" x2="-56" y2="56" stroke="#0F766E" stroke-width="2" opacity="0.6"/>
+    <line x1="-56" y1="56" x2="-80" y2="0" stroke="#0F766E" stroke-width="2" opacity="0.6"/>
+    <line x1="-80" y1="0" x2="-56" y2="-56" stroke="#0F766E" stroke-width="2" opacity="0.6"/>
+    <line x1="-56" y1="-56" x2="0" y2="-80" stroke="#0F766E" stroke-width="2" opacity="0.6"/>
+    
+    <!-- Cross connections -->
+    <line x1="0" y1="-80" x2="0" y2="0" stroke="#0F766E" stroke-width="2" opacity="0.4"/>
+    <line x1="80" y1="0" x2="0" y2="0" stroke="#0F766E" stroke-width="2" opacity="0.4"/>
+    <line x1="0" y1="80" x2="0" y2="0" stroke="#0F766E" stroke-width="2" opacity="0.4"/>
+    <line x1="-80" y1="0" x2="0" y2="0" stroke="#0F766E" stroke-width="2" opacity="0.4"/>
+    
+    <!-- Central eye -->
+    <circle cx="0" cy="0" r="45" fill="none" stroke="#0F766E" stroke-width="3"/>
+    <circle cx="0" cy="0" r="20" fill="#F59E0B"/>
+    <circle cx="5" cy="-5" r="8" fill="#FFF"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="320" y="220" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="#0F172A">Drishti</text>
+  <text x="320" y="260" font-family="Arial, sans-serif" font-size="32" fill="#5EEAD4">Smarter, Together</text>
+</svg>
